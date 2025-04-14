@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { app } from '../firebase-config';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase-config';
 
 export default function Home() {
   const router = useRouter();
-  const auth = getAuth(app);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -27,10 +26,10 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <main style={{ textAlign: 'center', padding: '2rem' }}>
       <h1>Missão 60 Dias</h1>
-      <p>Faça login para acessar seu painel</p>
-      <button onClick={handleLogin}>Entrar com e-mail</button>
-    </div>
+      <p>Faça login com seu e-mail</p>
+      <button onClick={handleLogin}>Entrar</button>
+    </main>
   );
 }
