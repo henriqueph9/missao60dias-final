@@ -11,13 +11,17 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <script>
-          if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-              navigator.serviceWorker.register('/service-worker.js');
-            });
-          }
-        </script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/service-worker.js');
+                });
+              }
+            `
+          }}
+        />
       </body>
     </Html>
   );
