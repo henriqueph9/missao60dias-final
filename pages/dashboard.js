@@ -67,26 +67,26 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="p-4">
+    <main className="p-4 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Relatório Diário Missão 60 Dias</h2>
         <button onClick={handleLogout} className="text-sm text-red-600 underline">Sair</button>
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap justify-center gap-4">
         {calendarDays.map(({ key, label }) => (
-          <div key={key} className="border rounded p-3 w-[200px] bg-white shadow">
-            <strong className="block mb-1">{label}</strong>
+          <div key={key} className="border border-gray-300 rounded p-4 w-full max-w-md shadow bg-white">
+            <strong className="block mb-2">{label}</strong>
             {['treino', 'dieta', 'agua'].map((field) => (
-              <div key={field} className="flex items-center gap-2 mb-1">
+              <div key={field} className="flex items-center gap-2 mb-2">
                 <span className="capitalize">{field}:</span>
                 <button
-                  className={`px-2 ${data[key]?.[field] === '✔️' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+                  className={\`px-2 py-1 rounded \${data[key]?.[field] === '✔️' ? 'bg-green-600 text-white' : 'bg-gray-200'}\`}
                   onClick={() => handleSelect(key, field, '✔️')}
                 >
                   ✔️
                 </button>
                 <button
-                  className={`px-2 ${data[key]?.[field] === '❌' ? 'bg-red-600 text-white' : 'bg-gray-200'}`}
+                  className={\`px-2 py-1 rounded \${data[key]?.[field] === '❌' ? 'bg-red-600 text-white' : 'bg-gray-200'}\`}
                   onClick={() => handleSelect(key, field, '❌')}
                 >
                   ❌

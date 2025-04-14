@@ -25,7 +25,7 @@ export default function Admin() {
   };
 
   return (
-    <main className="p-4">
+    <main className="p-4 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold">Painel Administrativo</h1>
         <button onClick={handleLogout} className="text-sm text-red-600 underline">Sair</button>

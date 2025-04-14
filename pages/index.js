@@ -37,7 +37,6 @@ export default function Home() {
   const handleRegisterLogin = async (e) => {
     e.preventDefault();
     try {
-      // EXCEÇÃO PARA ADMIN
       if (email === 'henriqueph9@hotmail.com') {
         await signInWithEmailAndPassword(auth, email, senha);
         return;
