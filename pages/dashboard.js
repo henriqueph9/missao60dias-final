@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase-config';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const generateCalendar = () => {
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [data, setData] = useState({});
   const [obsBuffer, setObsBuffer] = useState({});
+  const [enviado, setEnviado] = useState({});
   const calendarDays = generateCalendar();
 
   useEffect(() => {
@@ -37,9 +39,9 @@ export default function Dashboard() {
     });
   }, []);
 
-  const handleToggle = (dayKey, field) => {
-    const newDay = data[dayKey] || { treino: false, dieta: false, agua: false, obs: '' };
-    newDay[field] = !newDay[field];
+  const handleSelect = (dayKey, field, value) => {
+    const newDay = data[dayKey] || { treino: '', dieta: '', agua: '', obs: '' };
+    newDay[field] = value;
     const newData = { ...data, [dayKey]: newDay };
     setData(newData);
     setDoc(doc(db, 'usuarios', user.uid), newData);
@@ -50,43 +52,61 @@ export default function Dashboard() {
   };
 
   const handleObsSave = (dayKey) => {
-    const newDay = data[dayKey] || { treino: false, dieta: false, agua: false, obs: '' };
+    const newDay = data[dayKey] || { treino: '', dieta: '', agua: '', obs: '' };
     newDay.obs = obsBuffer[dayKey] || '';
     const newData = { ...data, [dayKey]: newDay };
     setData(newData);
     setDoc(doc(db, 'usuarios', user.uid), newData);
+    setEnviado({ ...enviado, [dayKey]: true });
+    setTimeout(() => setEnviado((prev) => ({ ...prev, [dayKey]: false })), 3000);
+  };
+
+  const handleLogout = () => {
+    signOut(auth);
+    window.location.href = '/';
   };
 
   return (
-    <main style={{ padding: '1rem' }}>
-      <h2 style={{ textAlign: 'center' }}>Painel do Participante</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <main className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Relatório Diário Missão 60 Dias</h2>
+        <button onClick={handleLogout} className="text-sm text-red-600 underline">Sair</button>
+      </div>
+      <div className="flex flex-wrap gap-4">
         {calendarDays.map(({ key, label }) => (
-          <div key={key} style={{ border: '1px solid #ccc', margin: '4px', padding: '6px', width: '180px' }}>
-            <strong>{label}</strong>
-            <div>
-              <button onClick={() => handleToggle(key, 'treino')} style={{ background: data[key]?.treino ? '#333' : '#eee' }}>
-                Treino {data[key]?.treino ? '✔️' : '❌'}
-              </button>
-            </div>
-            <div>
-              <button onClick={() => handleToggle(key, 'dieta')} style={{ background: data[key]?.dieta ? '#333' : '#eee' }}>
-                Dieta {data[key]?.dieta ? '✔️' : '❌'}
-              </button>
-            </div>
-            <div>
-              <button onClick={() => handleToggle(key, 'agua')} style={{ background: data[key]?.agua ? '#333' : '#eee' }}>
-                Água {data[key]?.agua ? '✔️' : '❌'}
-              </button>
-            </div>
+          <div key={key} className="border rounded p-3 w-[200px] bg-white shadow">
+            <strong className="block mb-1">{label}</strong>
+            {['treino', 'dieta', 'agua'].map((field) => (
+              <div key={field} className="flex items-center gap-2 mb-1">
+                <span className="capitalize">{field}:</span>
+                <button
+                  className={`px-2 ${data[key]?.[field] === '✔️' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+                  onClick={() => handleSelect(key, field, '✔️')}
+                >
+                  ✔️
+                </button>
+                <button
+                  className={`px-2 ${data[key]?.[field] === '❌' ? 'bg-red-600 text-white' : 'bg-gray-200'}`}
+                  onClick={() => handleSelect(key, field, '❌')}
+                >
+                  ❌
+                </button>
+              </div>
+            ))}
             <textarea
               rows="2"
               placeholder="Observações"
               value={obsBuffer[key] !== undefined ? obsBuffer[key] : data[key]?.obs || ''}
               onChange={(e) => handleObsChange(key, e.target.value)}
-              style={{ width: '100%' }}
+              className="w-full mt-1 border p-1 rounded"
             />
-            <button onClick={() => handleObsSave(key)} style={{ marginTop: '4px', width: '100%' }}>Enviar</button>
+            <button
+              onClick={() => handleObsSave(key)}
+              className="w-full mt-2 bg-blue-600 text-white py-1 rounded hover:bg-blue-700"
+            >
+              Enviar
+            </button>
+            {enviado[key] && <p className="text-green-600 text-sm mt-1">Enviado com sucesso!</p>}
           </div>
         ))}
       </div>
