@@ -21,10 +21,13 @@ export default function Home() {
       if (user) {
         const docRef = doc(db, 'usuarios', user.uid);
         const docSnap = await getDoc(docRef);
-        if (!docSnap.exists() && email !== 'henriqueph9@hotmail.com') {
+        if (!docSnap.exists() && email !== 'henriqueph9@hotmail.com' && email !== 'angelinanogueira08@gmail.com') {
           await setDoc(docRef, { nome });
         }
-        if (user.email === 'henriqueph9@hotmail.com') {
+        if (
+          user.email === 'henriqueph9@hotmail.com' ||
+          user.email === 'angelinanogueira08@gmail.com'
+        ) {
           router.push('/admin');
         } else {
           router.push('/dashboard');
@@ -37,7 +40,10 @@ export default function Home() {
   const handleRegisterLogin = async (e) => {
     e.preventDefault();
     try {
-      if (email === 'henriqueph9@hotmail.com') {
+      if (
+        email === 'henriqueph9@hotmail.com' ||
+        email === 'angelinanogueira08@gmail.com'
+      ) {
         await signInWithEmailAndPassword(auth, email, senha);
         return;
       }
@@ -48,7 +54,7 @@ export default function Home() {
         const login = await signInWithEmailAndPassword(auth, email, senha);
         const docRef = doc(db, 'usuarios', login.user.uid);
         const docSnap = await getDoc(docRef);
-        if (!docSnap.exists() && email !== 'henriqueph9@hotmail.com') {
+        if (!docSnap.exists()) {
           await setDoc(docRef, { nome });
         }
       } catch (e) {
@@ -71,7 +77,7 @@ export default function Home() {
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             className="w-full px-4 py-2 border rounded"
-            required={email !== 'henriqueph9@hotmail.com'}
+            required={email !== 'henriqueph9@hotmail.com' && email !== 'angelinanogueira08@gmail.com'}
           />
           <input
             type="email"

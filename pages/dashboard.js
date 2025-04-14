@@ -80,13 +80,17 @@ export default function Dashboard() {
               <div key={field} className="flex items-center gap-2 mb-2">
                 <span className="capitalize">{field}:</span>
                 <button
-                  className={`px-2 py-1 rounded \${data[key]?.[field] === '✔️' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+                  className={`px-2 py-1 rounded ${
+                    data[key]?.[field] === '✔️' ? 'bg-green-600 text-white' : 'bg-gray-200'
+                  }`}
                   onClick={() => handleSelect(key, field, '✔️')}
                 >
                   ✔️
                 </button>
                 <button
-                  className={`px-2 py-1 rounded \${data[key]?.[field] === '❌' ? 'bg-red-600 text-white' : 'bg-gray-200'}`}
+                  className={`px-2 py-1 rounded ${
+                    data[key]?.[field] === '❌' ? 'bg-red-600 text-white' : 'bg-gray-200'
+                  }`}
                   onClick={() => handleSelect(key, field, '❌')}
                 >
                   ❌
