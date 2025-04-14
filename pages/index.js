@@ -21,7 +21,7 @@ export default function Home() {
       if (user) {
         const docRef = doc(db, 'usuarios', user.uid);
         const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) {
+        if (!docSnap.exists() && email !== 'henriqueph9@hotmail.com') {
           await setDoc(docRef, { nome });
         }
         if (user.email === 'henriqueph9@hotmail.com') {
@@ -37,15 +37,19 @@ export default function Home() {
   const handleRegisterLogin = async (e) => {
     e.preventDefault();
     try {
+      // EXCEÇÃO PARA ADMIN
+      if (email === 'henriqueph9@hotmail.com') {
+        await signInWithEmailAndPassword(auth, email, senha);
+        return;
+      }
       const cred = await createUserWithEmailAndPassword(auth, email, senha);
       await setDoc(doc(db, 'usuarios', cred.user.uid), { nome });
     } catch (err) {
-      // Se já for registrado, tenta logar
       try {
         const login = await signInWithEmailAndPassword(auth, email, senha);
         const docRef = doc(db, 'usuarios', login.user.uid);
         const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) {
+        if (!docSnap.exists() && email !== 'henriqueph9@hotmail.com') {
           await setDoc(docRef, { nome });
         }
       } catch (e) {
@@ -68,7 +72,7 @@ export default function Home() {
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             className="w-full px-4 py-2 border rounded"
-            required
+            required={email !== 'henriqueph9@hotmail.com'}
           />
           <input
             type="email"
