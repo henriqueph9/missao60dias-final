@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
       <h1>Missão 60 Dias</h1>
-      <p>Faça login para começar</p>
+      <p>Faça login para acessar seu painel</p>
       <button onClick={handleLogin}>Entrar com e-mail</button>
     </div>
   );
