@@ -32,10 +32,12 @@ export default function Admin() {
       </div>
       {usuarios.map((u) => (
         <div key={u.uid} className="border p-3 mb-4 bg-white rounded shadow">
-          <h3 className="font-semibold text-blue-600">Usuário: {u.uid}</h3>
+          <h3 className="font-semibold text-blue-600">
+            Participante: {u.nome || 'Sem nome'}
+          </h3>
           <div className="text-sm text-gray-700 space-y-1 mt-2">
             {Object.entries(u)
-              .filter(([k]) => k !== 'uid')
+              .filter(([k]) => k !== 'uid' && k !== 'nome')
               .map(([dia, dados]) => (
                 <div key={dia}>
                   <strong>{dia}:</strong> Treino {dados.treino || '–'} | Dieta {dados.dieta || '–'} | Água {dados.agua || '–'}
